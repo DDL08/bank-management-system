@@ -1,14 +1,18 @@
-name: Mirror to Gitee
-on: [push]
+name: Mirror Github org repos to Gitee
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   mirror_to_gitee:
     runs-on: ubuntu-latest
     steps:
-      - name: Mirror to Gitee
-        uses: Yikun/actions-mirror@v0.4.9
+      - name: Mirror the Github organization repos to Gitee
+        uses: Yikun/hub-mirror-action@master
         with:
-          src: 'git@github.com:DDL08/bank-management-system.git'
-          dst: 'git@gitee.com:lidd8/bank-management-system.git'
-          static_list: 'main'
-          ssh_private_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          src: github/kunpengcompute
+          dst: gitee/kunpengcompute
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          account_type: org
