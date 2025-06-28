@@ -9,8 +9,8 @@ jobs:
       - name: Mirror GitHub to Gitee
         uses: Yikun/hub-mirror-action@master
         with:
-          src: github/DDL08/bank-management-system
-          dst: gitee/lidd8/bank-management-system
+          src: github/DDL08
+          dst: gitee/lidd8
           dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
           dst_token: ${{ secrets.GITEE_TOKEN }}
           account_type: user
