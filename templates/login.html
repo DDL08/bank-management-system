@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>登录</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h2>银行系统登录</h2>
+  <form method="POST">
+    <input type="text" name="username" placeholder="用户名" required>
+    <input type="password" name="password" placeholder="密码" required>
+    <button type="submit">登录</button>
+  </form>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <p>{{ messages[0] }}</p>
+    {% endif %}
+  {% endwith %}
+</body>
+</html>
