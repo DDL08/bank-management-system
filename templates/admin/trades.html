@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>交易管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body { padding: 20px; background-color: #f5f8fa; }
+        .container { max-width: 1000px; margin: auto; background: white; padding: 20px; border-radius: 8px; }
+        table { width: 100%; }
+        th, td { padding: 12px; text-align: left; }
+        th { background: #0f3460; color: white; }
+        tr:hover { background-color: #f1f1f1; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>交易管理</h2>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-success">
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+        <!-- 查询表单 -->
+    <form method="get" action="{{ url_for('admin.list_trades') }}" class="mb-3 d-flex gap-2">
+        <input type="text" name="q" class="form-control" placeholder="搜索卡号、交易类型或备注" value="{{ keyword or '' }}">
+        <button type="submit" class="btn btn-primary">查询</button>
+    </form>
+    <div class="mb-3">
+        <a href="{{ url_for('admin.export_trades') }}" class="btn btn-primary">导出交易数据 CSV</a>
+        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">返回仪表盘</a>
+    </div>
+
+    <table class="table table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>交易ID</th>
+                <th>交易时间</th>
+                <th>交易类型</th>
+                <th>交易金额</th>
+                <th>卡号</th>
+                <th>客户姓名</th>
+                <th>备注</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trade in trades %}
+            <tr>
+                <td>{{ trade.tradeID }}</td>
+                <td>{{ trade.tradeDate }}</td>
+                <td>{{ trade.tradeType }}</td>
+                <td>{{ trade.tradeMoney }}</td>
+                <td>{{ trade.cardID or '无' }}</td>
+                <td>{{ trade.customerName or '未知' }}</td>
+                <td>{{ trade.remark or '' }}</td>
+                <td>
+                    <form action="{{ url_for('admin.delete_trade', tradeID=trade.tradeID) }}" method="post" style="display:inline;" onsubmit="return confirm('确认删除该交易记录？');">
+                        <button type="submit" class="btn btn-sm btn-danger">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% else %}
+            <tr>
+                <td colspan="8" class="text-center">暂无交易记录</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

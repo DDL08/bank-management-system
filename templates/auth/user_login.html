@@ -1,18 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>银行系统 - 管理员登录</title>
+  <title>银行系统 - 用户登录</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
       background-color: #eef2f5;
       font-family: Arial, sans-serif;
     }
-
-   .login-container {
+    .login-container {
       background-color: white;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -20,17 +18,14 @@
       width: 400px;
       margin: 100px auto;
     }
-
     h2 {
       text-align: center;
       color: #0f3460;
       margin-bottom: 30px;
     }
-
     form label {
       font-weight: bold;
     }
-
     form input[type="text"],
     form input[type="password"] {
       width: 100%;
@@ -39,7 +34,6 @@
       border: 1px solid #ccc;
       border-radius: 5px;
     }
-
     button[type="submit"] {
       width: 100%;
       background-color: #0f3460;
@@ -49,44 +43,37 @@
       border-radius: 5px;
       cursor: pointer;
     }
-
     button[type="submit"]:hover {
       background-color: #1a508b;
     }
-
     p {
       text-align: center;
       margin-top: 20px;
     }
-
     a {
       color: #3282b8;
       text-decoration: none;
     }
-
     a:hover {
       text-decoration: underline;
     }
   </style>
 </head>
-
 <body>
   <div class="login-container">
-    <h2>管理员登录</h2>
+    <h2>用户登录</h2>
     <form method="post">
       <div class="mb-3">
-        <label for="username" class="form-label">用户名</label>
-        <input type="text" class="form-control" id="username" name="username" required>
+        <label for="cardID" class="form-label">银行卡号</label>
+        <input type="text" class="form-control" id="cardID" name="cardID" required>
       </div>
       <div class="mb-3">
-        <label for="password" class="form-label">密码</label>
+        <label for="password" class="form-label">交易密码</label>
         <input type="password" class="form-control" id="password" name="password" required>
       </div>
       <button type="submit" class="btn btn-primary">登录</button>
     </form>
-    <p>还没有账号？<a href="/register">点击注册</a></p>
-    <p>我是客户？<a href="/user_login">点此用户登录</a></p>
+    <p>返回<a href="/">首页</a></p>
   </div>
 </body>
-
 </html>

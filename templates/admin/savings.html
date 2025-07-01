@@ -1,0 +1,55 @@
+<!-- templates/admin/savings.html -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>存款业务管理</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>存款业务管理</h2>
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="alert alert-info">
+        {% for msg in messages %}
+        <p>{{ msg }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="mb-3">
+        <a href="{{ url_for('admin.add_saving') }}" class="btn btn-success">➕ 添加新业务</a>
+        <a href="{{ url_for('admin.export_savings') }}" class="btn btn-secondary">📤 导出为 CSV</a>
+    </div>
+
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th>业务编号</th>
+            <th>业务名称</th>
+            <th>描述</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for saving in savings %}
+        <tr>
+            <td>{{ saving.savingID }}</td>
+            <td>{{ saving.savingName }}</td>
+            <td>{{ saving.descrip }}</td>
+            <td>
+                <a href="{{ url_for('admin.edit_saving', savingID=saving.savingID) }}" class="btn btn-sm btn-primary">编辑</a>
+                <form action="{{ url_for('admin.delete_saving', savingID=saving.savingID) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('确认删除？');">
+                    <button type="submit" class="btn btn-sm btn-danger">删除</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

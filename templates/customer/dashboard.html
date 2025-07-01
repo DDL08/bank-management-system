@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>客户仪表盘</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-5">
+    <div class="container bg-white p-4 rounded shadow">
+        <h2>欢迎，卡号 {{ cardID }}</h2>
+        <hr>
+        <ul class="list-group">
+            <li class="list-group-item"><a href="{{ url_for('customer.check_balance') }}">查看余额</a></li>
+            <li class="list-group-item"><a href="{{ url_for('customer.view_trades') }}">交易记录</a></li>
+            <li class="list-group-item"><a href="{{ url_for('customer.deposit') }}">存款</a></li>
+            <li class="list-group-item"><a href="{{ url_for('customer.withdraw') }}">取款</a></li>
+            <li class="list-group-item"><a href="{{ url_for('customer.transfer') }}">账户转账</a></li>
+            <li class="list-group-item"><a href="{{ url_for('customer.change_password') }}">修改密码</a></li>
+        </ul>
+        <form method="post" action="{{ url_for('customer.report_loss') }}" class="mt-3">
+            <button type="submit" class="btn btn-danger">挂失卡片</button>
+        </form>
+    </div>
+</body>
+</html>

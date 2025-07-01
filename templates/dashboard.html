@@ -1,3 +1,14 @@
-<h1>欢迎管理员：{{ user.username }}</h1>
-<p>这里将展示客户管理、银行卡管理等功能。</p>
-<a href="{{ url_for('logout') }}">退出</a>
+<!DOCTYPE html>
+<html>
+<head><title>管理员后台</title></head>
+<body>
+  <h2>欢迎管理员 {{ username }}</h2>
+  <ul>
+    <li><a href="{{ url_for('admin.list_customers') }}">客户管理</a></li>
+    <li><a href="{{ url_for('admin.list_cards') }}">银行卡管理</a></li>
+    <li><a href="{{ url_for('admin.list_savings') }}">存款业务管理</a></li>
+    <li><a href="{{ url_for('admin.list_trades') }}">交易管理</a></li>
+    <li><a href="{{ url_for('admin.logout') }}">退出登录</a></li>
+  </ul>
+</body>
+</html>
