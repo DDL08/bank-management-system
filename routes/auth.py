@@ -65,7 +65,7 @@ def user_login():
             session.clear()
             session['cardID'] = cardID  # 记录客户登录状态
             flash('登录成功')
-            return redirect('/user_dashboard')
+            return redirect('/customer/dashboard')
         else:
             flash('卡号或密码错误')
 

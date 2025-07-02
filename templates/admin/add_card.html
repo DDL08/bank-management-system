@@ -1,120 +1,23 @@
-<!DOCTYPE html>
-<html lang="zh-CN">
+<form method="post">
+  <label>客户姓名</label>
+  <select name="customerName" class="form-select" required>
+    {% for c in customers %}
+      <option value="{{ c.customerName }}">{{ c.customerName }}</option>
+    {% endfor %}
+  </select>
 
-<head>
-    <meta charset="UTF-8">
-    <title>添加银行卡</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <style>
-        body {
-            background-color: #f5f8fa;
-            font-family: 'Inter', sans-serif;
-            padding: 20px;
-        }
+  <label>存款类型</label>
+  <select name="savingID" class="form-select" required>
+    {% for s in saving_types %}
+      <option value="{{ s.savingID }}">{{ s.savingName }}</option>
+    {% endfor %}
+  </select>
 
-       .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            padding: 25px;
-        }
+  <label>开户金额</label>
+  <input type="number" name="openMoney" min="1" step="0.01" class="form-control" required>
 
-        h2 {
-            color: #0f3460;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
+  <label>密码</label>
+  <input type="password" name="password" class="form-control" required>
 
-       .form-group {
-            margin-bottom: 15px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
-            color: #333;
-        }
-
-        input {
-            width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-        }
-
-        input:focus {
-            outline: none;
-            border-color: #0f3460;
-            box-shadow: 0 0 0 2px rgba(15, 52, 96, 0.2);
-        }
-
-        button[type="submit"] {
-            background-color: #0f3460;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-weight: 500;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        button[type="submit"]:hover {
-            background-color: #1a508b;
-        }
-
-       .back-link {
-            display: inline-block;
-            margin-top: 20px;
-            color: #0f3460;
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-       .back-link:hover {
-            text-decoration: underline;
-        }
-
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <h2>添加银行卡</h2>
-        <form method="post">
-            <div class="form-group">
-                <label for="cardID">卡号：</label>
-                <input type="text" id="cardID" name="cardID" required pattern="10103576\d{8}">
-            </div>
-            <div class="form-group">
-                <label for="customerID">客户ID：</label>
-                <input type="number" id="customerID" name="customerID" required>
-            </div>
-            <div class="form-group">
-                <label for="savingID">存款类型ID：</label>
-                <input type="number" id="savingID" name="savingID" required>
-            </div>
-            <div class="form-group">
-                <label for="openMoney">开户金额：</label>
-                <input type="number" id="openMoney" name="openMoney" min="1" required>
-            </div>
-            <div class="form-group">
-                <label for="password">密码：</label>
-                <input type="text" id="password" name="password" value="888888" required pattern="\d{6}">
-            </div>
-            <button type="submit">
-                <i class="fa fa-check"></i> 提交
-            </button>
-        </form>
-        <a href="{{ url_for('admin.list_cards') }}" class="back-link">
-            <i class="fa fa-arrow-left"></i> 返回银行卡列表
-        </a>
-    </div>
-</body>
-
-</html>
+  <button type="submit" class="btn btn-primary mt-3">开户</button>
+</form>

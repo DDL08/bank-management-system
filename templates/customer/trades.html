@@ -5,7 +5,15 @@
     <title>交易记录</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
+
 <body class="bg-light p-5">
+    <div class="summary mt-4 mb-4">
+    <h4>交易汇总</h4>
+    <p>💰 总交易额：<strong>{{ total_amount }} 元</strong></p>
+    <p>📆 本月交易总额：<strong>{{ month_total }} 元</strong>，共 <strong>{{ month_count }} 笔</strong></p>
+    <a href="{{ url_for('customer.export_trades') }}" class="btn btn-success mt-2">导出交易记录 CSV</a>
+    </div>
+
     <div class="container bg-white p-4 rounded shadow">
         <h2>交易记录</h2>
         <table class="table table-bordered mt-3">

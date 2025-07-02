@@ -24,6 +24,19 @@ CREATE TABLE deposit (
     descrip TEXT
 );
 
+INSERT INTO deposit (savingName, descrip) VALUES
+('活期', '无固定存期，可随时存取，存取金额不限的一种比较灵活的存款'),
+('定活两便', '事先不约定存期，一次性存入，一次性支取的存款'),
+('整存整取', '选择存款期限，整笔存入，到期提取本息，是一种定期储蓄。银行提供的存款期限有 1 年、2 年和 3 年'),
+('零存整取', '一种事先约定金额，逐月按约定金额存入，到期支取本息的定期储蓄。银行提供的存款期限有 1 年、2 年和 3 年');
+
+/*
+存款类型 (deposit)包括如下属性：
+1）存款编号 (savingID): 每种存款类型的唯一标识符
+5
+2）存款名称 (savingName): 记录存款类型的名称
+3）存款描述 (descrip): 记录存款类型的描述
+*/
 -- 银行卡信息表
 CREATE TABLE cardInfo (
     cardID CHAR(16) PRIMARY KEY,

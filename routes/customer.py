@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
 from db import get_db
+from datetime import datetime
+import csv
+from flask import Response
 
 customer_bp = Blueprint('customer', __name__, url_prefix='/customer')
 auth_bp = Blueprint('auth', __name__)
@@ -15,7 +18,7 @@ def login_required(func):
     return wrapper
 
 # 首页 / 仪表盘
-@customer_bp.route('/user_dashboard')
+@customer_bp.route('/dashboard')
 @login_required
 def dashboard():
     return render_template('customer/dashboard.html', cardID=session['cardID'])
@@ -29,6 +32,7 @@ def check_balance():
     cursor.execute("SELECT balance FROM cardInfo WHERE cardID = %s", (session['cardID'],))
     balance = cursor.fetchone()
     return render_template('customer/balance.html', balance=balance)
+4
 
 # 2. 交易查询
 @customer_bp.route('/trades')
@@ -36,12 +40,66 @@ def check_balance():
 def view_trades():
     conn = get_db()
     cursor = conn.cursor()
+
+    # 获取所有交易记录
     cursor.execute("""
-        SELECT * FROM trade 
+        SELECT * FROM tradeinfo 
         WHERE cardID = %s ORDER BY tradeDate DESC
     """, (session['cardID'],))
     trades = cursor.fetchall()
-    return render_template('customer/trades.html', trades=trades)
+
+    # 总交易额（全部）
+    cursor.execute("""
+        SELECT SUM(tradeMoney) AS total_amount
+        FROM tradeinfo
+        WHERE cardID = %s
+    """, (session['cardID'],))
+    total_result = cursor.fetchone()
+    total_amount = total_result['total_amount'] if total_result['total_amount'] else 0.00
+
+    # 本月月末汇总（当月交易总额 + 交易次数）
+    current_month = datetime.now().strftime('%Y-%m')
+    cursor.execute("""
+        SELECT 
+            SUM(tradeMoney) AS month_total,
+            COUNT(*) AS month_count
+        FROM tradeinfo
+        WHERE cardID = %s AND DATE_FORMAT(tradeDate, '%%Y-%%m') = %s
+    """, (session['cardID'], current_month))
+    month_summary = cursor.fetchone()
+    month_total = month_summary['month_total'] if month_summary['month_total'] else 0.00
+    month_count = month_summary['month_count']
+
+    return render_template(
+        'customer/trades.html',
+        trades=trades,
+        total_amount=total_amount,
+        month_total=month_total,
+        month_count=month_count
+    )
+# 2.2 交易导出
+@customer_bp.route('/trades/export')
+@login_required
+def export_trades():
+    conn = get_db()
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT tradeID, cardID, tradeType, tradeMoney, tradeDate
+        FROM tradeinfo
+        WHERE cardID = %s
+        ORDER BY tradeDate DESC
+    """, (session['cardID'],))
+    trades = cursor.fetchall()
+
+    # 生成 CSV 数据
+    def generate():
+        yield '交易ID,卡号,交易类型,金额,交易日期\n'
+        for row in trades:
+            yield f'{row["tradeID"]},{"'" + str(row['cardID'])},{row["tradeType"]},{row["tradeMoney"]},{row["tradeDate"]}\n'
+
+    return Response(generate(), mimetype='text/csv',
+                    headers={"Content-Disposition": "attachment;filename=trades.csv"})
 
 # 3. 存款
 @customer_bp.route('/deposit', methods=['GET', 'POST'])
@@ -62,8 +120,8 @@ def deposit():
                 UPDATE cardInfo SET balance = balance + %s WHERE cardID = %s
             """, (amount, session['cardID']))
             cursor.execute("""
-                INSERT INTO trade (tradeType, tradeMoney, cardID, remark, tradeDate)
-                VALUES ('存款', %s, %s, '客户存款', NOW())
+                INSERT INTO tradeinfo (tradeType, tradeMoney, cardID, remark, tradeDate)
+                VALUES ('存入', %s, %s, '客户存款', NOW())
             """, (amount, session['cardID']))
             conn.commit()
             flash("存款成功")
@@ -92,8 +150,8 @@ def withdraw():
                     UPDATE cardInfo SET balance = balance - %s WHERE cardID = %s
                 """, (amount, session['cardID']))
                 cursor.execute("""
-                    INSERT INTO trade (tradeType, tradeMoney, cardID, remark, tradeDate)
-                    VALUES ('取款', %s, %s, '客户取款', NOW())
+                    INSERT INTO tradeinfo (tradeType, tradeMoney, cardID, remark, tradeDate)
+                    VALUES ('支取', %s, %s, '客户取款', NOW())
                 """, (amount, session['cardID']))
                 conn.commit()
                 flash("取款成功")
@@ -173,13 +231,13 @@ def transfer():
 
             # 记录交易
             cursor.execute("""
-                INSERT INTO trade (tradeType, tradeMoney, cardID, remark, tradeDate)
-                VALUES ('转出', %s, %s, %s, NOW())
+                INSERT INTO tradeinfo (tradeType, tradeMoney, cardID, remark, tradeDate)
+                VALUES ('支取', %s, %s, %s, NOW())
             """, (amount, session['cardID'], f"转给卡号 {to_card}"))
 
             cursor.execute("""
-                INSERT INTO trade (tradeType, tradeMoney, cardID, remark, tradeDate)
-                VALUES ('转入', %s, %s, %s, NOW())
+                INSERT INTO tradeinfo (tradeType, tradeMoney, cardID, remark, tradeDate)
+                VALUES ('存入', %s, %s, %s, NOW())
             """, (amount, to_card, f"来自卡号 {session['cardID']}"))
 
             conn.commit()
