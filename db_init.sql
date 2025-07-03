@@ -30,18 +30,12 @@ INSERT INTO deposit (savingName, descrip) VALUES
 ('整存整取', '选择存款期限，整笔存入，到期提取本息，是一种定期储蓄。银行提供的存款期限有 1 年、2 年和 3 年'),
 ('零存整取', '一种事先约定金额，逐月按约定金额存入，到期支取本息的定期储蓄。银行提供的存款期限有 1 年、2 年和 3 年');
 
-/*
-存款类型 (deposit)包括如下属性：
-1）存款编号 (savingID): 每种存款类型的唯一标识符
-5
-2）存款名称 (savingName): 记录存款类型的名称
-3）存款描述 (descrip): 记录存款类型的描述
-*/
--- 银行卡信息表
+
+--银行卡信息修改版本
 CREATE TABLE cardInfo (
     cardID CHAR(16) PRIMARY KEY,
     curID VARCHAR(10) DEFAULT 'RMB',
-    openDate DATE DEFAULT CURRENT_DATE,
+    openDate DATETIME DEFAULT CURRENT_TIMESTAMP,
     openMoney DECIMAL(10,2) NOT NULL CHECK (openMoney >= 1),
     balance DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (balance >= 1),
     pass CHAR(6) NOT NULL DEFAULT '888888',
@@ -114,20 +108,7 @@ END $$
 DELIMITER ;
 
 
---银行卡信息修改版本
-CREATE TABLE cardInfo (
-    cardID CHAR(16) PRIMARY KEY,
-    curID VARCHAR(10) DEFAULT 'RMB',
-    openDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-    openMoney DECIMAL(10,2) NOT NULL CHECK (openMoney >= 1),
-    balance DECIMAL(10,2) NOT NULL DEFAULT 0 CHECK (balance >= 1),
-    pass CHAR(6) NOT NULL DEFAULT '888888',
-    IsReportLoss BOOLEAN DEFAULT FALSE,
-    customerID INT NOT NULL,
-    savingID INT NOT NULL,
-    FOREIGN KEY (customerID) REFERENCES userInfo(customerID) ON DELETE CASCADE,
-    FOREIGN KEY (savingID) REFERENCES deposit(savingID)
-);
+
 
 
 
